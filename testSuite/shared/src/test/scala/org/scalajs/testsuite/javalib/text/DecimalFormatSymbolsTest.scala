@@ -18,7 +18,7 @@ class DecimalFormatSymbolsTest extends LocaleTestSetup {
   // the JVM and JS
   @Before def cleanup: Unit = super.cleanDatabase
 
-  case class LocaleTestItem(ldml: LDML, tag: String, cldr31: Boolean = false)
+  case class LocaleTestItem(ldml: LDML, tag: String, cldr21: Boolean = false)
 
   val englishSymbols = List("0", ".", ",", "‰", "%", "#", ";", "∞", "NaN", "-", "E")
 
@@ -118,16 +118,16 @@ class DecimalFormatSymbolsTest extends LocaleTestSetup {
   // These tests give the same data on CLDR 21
   @Test def test_extra_locales_not_agreeing_decimal_format_symbol(): Unit = {
     localesDiff.foreach {
-      case (LocaleTestItem(d, tag, cldr31), symbols) =>
+      case (LocaleTestItem(d, tag, cldr21), symbols) =>
         if (!Platform.executingInJVM) {
           LocaleRegistry.installLocale(d)
         }
         val l = Locale.forLanguageTag(tag)
         val dfs = DecimalFormatSymbols.getInstance(l)
-        if (Platform.executingInJVM && cldr31) {
+        if (Platform.executingInJVM && cldr21) {
           test_dfs(dfs, symbols)
         }
-        if (!Platform.executingInJVM && !cldr31) {
+        if (!Platform.executingInJVM && !cldr21) {
           test_dfs(dfs, symbols)
         }
     }
